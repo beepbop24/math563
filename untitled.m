@@ -72,8 +72,8 @@ z22_k = applyD1(z1_k);
 z23_k = applyD2(z1_k);
 
 for k=1:100
-        x_k = boxProx(z1_k, t);
-        y1_k = l1Prox(z1_k, t, b);
+        x_k = boxProx(z1_k);
+        y1_k = l1Prox(z1_k, t, b); 
         [y2_k, y3_k] = isoProx(z22_k, z23_k, t, gamma);
 
         % applies A^T to (2y^k - z_2^{k-1})
