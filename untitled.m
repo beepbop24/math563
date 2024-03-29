@@ -14,10 +14,10 @@ image_x = image_x/mx;
 %resizefactor = 0.1;
 %image_x = imresize(image_x, resizefactor);
 
-kernel = fspecial('motion', 20, 45);
+kernel = fspecial('gaussian', [10 10], 15);
 
 b = imfilter(image_x, kernel);
-b = imnoise(b,'salt & pepper', 0.2);
+b = imnoise(b,'salt & pepper', 0.5);
 
 % show image for test
 figure('Name','original image')
@@ -84,10 +84,10 @@ applyDTrans = @(y) applyD1Trans(y(:,:,1)) + applyD2Trans(y(:, :, 2));
 % Function which computes the (I + K^TK + D^TD)x where x in R^(m x n)
 % matrix and the eigenvalues of I + t*t*K^TK + t*t*D^TD; here t is the
 % stepsizes
-t = i.tprimaldr; % Need to change this for the various algorithms you are applying
+s = 1; % Need to change this for the various algorithms you are applying
 applyMat = @(x) x + applyKTrans(applyK(x)) + applyDTrans(applyD(x));
-eigValsMat = ones(numRows, numCols) + t*t*eigArry_KTrans.*eigArry_K + t*t*eigArry_D1Trans.*eigArry_D1...
-    + t*t*eigArry_D2Trans.*eigArry_D2;
+eigValsMat = ones(numRows, numCols) + s*s*eigArry_KTrans.*eigArry_K + s*s*eigArry_D1Trans.*eigArry_D1...
+    + s*s*eigArry_D2Trans.*eigArry_D2;
 
 %R^(m x n) Computing (I + K^T*K + D^T*D)^(-1)*x
 invertMatrix = @(x) ifft2(fft2(x)./eigValsMat); 
@@ -113,7 +113,7 @@ z21_k = applyK(z1_k);
 z22_k = applyD1(z1_k);
 z23_k = applyD2(z1_k);
 
-for k=1:2
+for k=1:100
         x_k = boxProx(z1_k);
         y1_k = l1Prox(z21_k, t, b); 
         [y2_k, y3_k] = isoProx(z22_k, z23_k, t, gamma);
