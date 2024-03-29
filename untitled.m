@@ -14,10 +14,10 @@ image_x = image_x/mx;
 %resizefactor = 0.1;
 %image_x = imresize(image_x, resizefactor);
 
-kernel = fspecial('gaussian', [15 15], 10);
+kernel = fspecial('motion', 20, 45);
 
 b = imfilter(image_x, kernel);
-b = imnoise(b,'salt & pepper', 0.5);
+b = imnoise(b,'salt & pepper', 0.2);
 
 % show image for test
 figure('Name','image post deblurring')
@@ -51,29 +51,29 @@ i.scp = 0.1;
 %% TEST ALGO 1
 % initializing empty arrays for xk, yk, uk, vk
 t = 0.1;
-rho = 2;
+rho = 2.0;
 maxiter=500;
 gamma = 0.049;
 
-n = size(b, 1);
-x_k = zeros(n);
-y1_k = zeros(n);
-y2_k = zeros(n);
-y3_k = zeros(n);
-u_k = zeros(n);
-v1_k = zeros(n);
-v2_k = zeros(n);
-v3_k = zeros(n);
+[n, m] = size(b);
+x_k = zeros(n, m);
+y1_k = zeros(n, m);
+y2_k = zeros(n, m);
+y3_k = zeros(n, m);
+u_k = zeros(n, m);
+v1_k = zeros(n, m);
+v2_k = zeros(n, m);
+v3_k = zeros(n, m);
 
 % initializing zk
-z1_k = rand(n);
+z1_k = image_x;
 z21_k = applyK(z1_k);
 z22_k = applyD1(z1_k);
 z23_k = applyD2(z1_k);
 
-for k=1:100
+for k=1:2
         x_k = boxProx(z1_k);
-        y1_k = l1Prox(z1_k, t, b); 
+        y1_k = l1Prox(z21_k, t, b); 
         [y2_k, y3_k] = isoProx(z22_k, z23_k, t, gamma);
 
         % applies A^T to (2y^k - z_2^{k-1})
