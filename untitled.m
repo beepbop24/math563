@@ -93,27 +93,23 @@ eigValsMat = ones(numRows, numCols) + s*s*eigArry_KTrans.*eigArry_K + s*s*eigArr
 invertMatrix = @(x) ifft2(fft2(x)./eigValsMat); 
 
 %% TEST ALGO 1
-% initializing empty arrays for xk, yk, uk, vk
-rho = i.rhoprimaldualdr;
-gamma = i.gammal1;
+[m, n] = size(b);
+z1_0 = rand(m, n);
+z21_0 = applyK(z1_0);
+z22_0 = applyD1(z1_0);
+z23_0 = applyD2(z1_0);
 
-[n, m] = size(b);
-x_k = zeros(n, m);
-y1_k = zeros(n, m);
-y2_k = zeros(n, m);
-y3_k = zeros(n, m);
-u_k = zeros(n, m);
-v1_k = zeros(n, m);
-v2_k = zeros(n, m);
-v3_k = zeros(n, m);
+t=i.tprimaldr;
+rho=i.rhoprimaldr;
+gamma=i.gammal1;
+maxiter=i.maxiter;
 
-% initializing zk
-z1_k = image_x;
-z21_k = applyK(z1_k);
-z22_k = applyD1(z1_k);
-z23_k = applyD2(z1_k);
+z1_k = z1_0;
+z21_k = z21_0;
+z22_k = z22_0;
+z23_k = z23_0;
 
-for k=1:100
+    for k=1:500
         x_k = boxProx(z1_k);
         y1_k = l1Prox(z21_k, t, b); 
         [y2_k, y3_k] = isoProx(z22_k, z23_k, t, gamma);
@@ -124,6 +120,7 @@ for k=1:100
 
         u_k = invertMatrix(2*x_k-z1_k+temp);
 
+        % applies A(u_k)
         v1_k = applyK(u_k);
         v2_k = applyD1(u_k);  
         v3_k = applyD2(u_k);  
@@ -134,8 +131,13 @@ for k=1:100
         z22_k = z22_k+rho*(v2_k-y2_k);
         z23_k = z23_k+rho*(v3_k-y3_k);
 
-        %if res < tol 
+        %if loss < tol 
             %break;
         %end
-end
+    end
+
+    deblurred_x = boxProx(z1_k);
+
+figure();
+imshow(deblurred_x,[])
      
