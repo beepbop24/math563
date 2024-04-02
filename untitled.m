@@ -53,17 +53,18 @@ i.scp = 0.1;
 [applyK, applyD1, applyD2, applyKTrans, applyD1Trans, applyD2Trans, invertMatrix] = multiplyingMatrix(b, kernel, i.tcp);
 
 [m, n] = size(b);
-p_0 = rand(m, n);
-z21_0 = applyK(p_0);
-z22_0 = applyD1(p_0);
-z23_0 = applyD2(p_0);
+z1_0 = image_x; %rand(m, n);
+z21_0 = applyK(z1_0);
+z22_0 = applyD1(z1_0);
+z23_0 = applyD2(z1_0);
 
-q_0 = cat(3, z21_0, z22_0, z23_0);
+z2_0 = cat(3, z21_0, z22_0, z23_0);
 
 problem = 'l1';
 [norm_prox, gamma] = proxproblem(problem, i);
+tol = 10;
 
-deblurred_x = chambollepock(b, i.tcp, i.scp, gamma, i.maxiter, p_0, q_0, p_0, kernel, norm_test);
+[deblurred_x, k, loss] = chambollepock(b, image_x, 0.01, 0.01, 0.5, i.maxiter, tol, z1_0, z2_0, z1_0, kernel, norm_prox);
 
 figure();
 imshow(deblurred_x,[])
