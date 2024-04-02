@@ -1,4 +1,4 @@
-function [deblurred_x, k] = primaldr(b, x_original, t, rho, gamma, maxiter, tol, z1_0, z2_0, kernel, norm_prox)
+function [deblurred_x, k, loss] = primaldr(b, x_original, t, rho, gamma, maxiter, tol, z1_0, z2_0, kernel, norm_prox)
     % function that computes Primal Douglas-Rachford Splitting
     % INPUTS: blurred image b, step size t, relaxation parameter rho,
     % denoizing parameter gamma, number of max iterations maxiter, initial 
@@ -46,10 +46,11 @@ function [deblurred_x, k] = primaldr(b, x_original, t, rho, gamma, maxiter, tol,
         
         % output image
         deblurred_x = boxProx(z1_k);
+        loss = norm(deblurred_x - x_original, 2);
 
         % break condition if l2 norm of x-x* < tol (can be specified by
         % user)
-        if norm(deblurred_x - x_original, 2) < tol
+        if loss < tol
             break
         end
     end

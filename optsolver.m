@@ -1,4 +1,6 @@
 function [x_sol, summary] = optsolver(problem, algorithm, x_initial, x_original, kernel, b, i, tol)
+    % function that computes given algorithm to deblur image
+    % INPUTS: type of problem ...
 
     % selects correct norm & gamma to use for the function g (l1 or l2)
     [norm_prox, gamma] = proxproblem(problem);
