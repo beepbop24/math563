@@ -1,9 +1,9 @@
-function [deblurred_x, k, loss] = primaldualdr(b, x_original, t, rho, gamma, maxiter, tol, p_0, q_0, kernel, norm_prox)
+function [deblurred_x, k, loss] = primaldualdr(b, x_original, t, rho, gamma, maxiter, tol, analysis, x_initial, kernel, norm_prox)
 
     % function that computes Primal Douglas-Rachford Splitting
     % INPUTS: blurred image b, step size t, relaxation parameter rho,
     % denoizing parameter gamma, number of max iterations maxiter, initial 
-    % guess (z1_0, z2_0), blurring kernel and type of norm to use for the
+    % guess (p_0, q_0), blurring kernel and type of norm to use for the
     % prox of g
     % OUTPUTS: deblurred image 
 
@@ -12,10 +12,13 @@ function [deblurred_x, k, loss] = primaldualdr(b, x_original, t, rho, gamma, max
     [applyK, applyD1, applyD2, applyKTrans, applyD1Trans, applyD2Trans, invertMatrix] = multiplyingMatrix(b, kernel, t);
 
     % initialization of p and q values
-    p_k = p_0;
-    q1_k = q_0(:,:,1);
-    q2_k = q_0(:,:,2);
-    q3_k = q_0(:,:,3);
+    p_k = x_initial;
+    q1_k = applyK(p_k);
+    q2_k = applyD1(p_k);
+    q3_k = applyD2(p_k);
+    
+    % initialization of loss array
+    loss = zeros(1, maxiter);
     
     % main algorithm
     for k=1:maxiter
@@ -52,9 +55,17 @@ function [deblurred_x, k, loss] = primaldualdr(b, x_original, t, rho, gamma, max
         q3_k = q3_k+rho*(v3_k-z3_k);
 
         deblurred_x = boxProx(p_k);
-        loss = norm(deblurred_x-x_original, 2);
 
-        if loss < tol
+        loss(k) = norm(deblurred_x-x_original, 2);
+        timerend = "algorithm ongoing -- CPU time TBD";
+
+        % print summary if wanted during each iteration
+        if analysis
+            temp_summary = summary(deblurred_x, b, gamma, kernel, k, maxiter, loss, timerend, tol);
+        end
+
+        % break condition if l2 norm of x-x* < tol
+        if loss(k) < tol
             break
         end
     end

@@ -1,4 +1,4 @@
-function [deblurred_x, k, loss] = primaldr(b, x_original, t, rho, gamma, maxiter, tol, z1_0, z2_0, kernel, norm_prox)
+function [deblurred_x, k, loss] = primaldr(b, x_original, t, rho, gamma, maxiter, tol, analysis, x_initial, kernel, norm_prox)
     % function that computes Primal Douglas-Rachford Splitting
     % INPUTS: blurred image b, step size t, relaxation parameter rho,
     % denoizing parameter gamma, number of max iterations maxiter, initial 
@@ -11,10 +11,13 @@ function [deblurred_x, k, loss] = primaldr(b, x_original, t, rho, gamma, maxiter
     [applyK, applyD1, applyD2, applyKTrans, applyD1Trans, applyD2Trans, invertMatrix] = multiplyingMatrix(b, kernel, 1);
     
     % initialization of z1 and z2 values
-    z1_k = z1_0;
-    z21_k = z2_0(:,:,1);
-    z22_k = z2_0(:,:,2);
-    z23_k = z2_0(:,:,3);
+    z1_k = x_initial;
+    z21_k = applyK(z1_k);
+    z22_k = applyD1(z1_k);
+    z23_k = applyD2(z1_k);
+
+    % initialization of loss array
+    loss = zeros(1, maxiter);
 
     % main algorithm
     for k=1:maxiter
@@ -46,11 +49,17 @@ function [deblurred_x, k, loss] = primaldr(b, x_original, t, rho, gamma, maxiter
         
         % output image
         deblurred_x = boxProx(z1_k);
-        loss = norm(deblurred_x - x_original, 2);
 
-        % break condition if l2 norm of x-x* < tol (can be specified by
-        % user)
-        if loss < tol
+        loss(k) = norm(deblurred_x - x_original, 2);
+        timerend = "algorithm ongoing -- CPU time TBD";
+    
+        % print summary if wanted during each iteration
+        if analysis
+            temp_summary = summary(deblurred_x, b, gamma, kernel, k, maxiter, loss, timerend, tol);
+        end
+
+        % break condition if l2 norm of x-x* < tol
+        if loss(k) < tol
             break
         end
     end
