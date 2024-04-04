@@ -2,7 +2,7 @@ function [deblurred_x, k, loss] = chambollepock(b, x_original, t, s, gamma, maxi
     % function that computes Primal Douglas-Rachford Splitting
     % INPUTS: blurred image b, step size t, relaxation parameter rho,
     % denoizing parameter gamma, number of max iterations maxiter, initial 
-    % guess (z1_0, z2_0), blurring kernel and type of norm to use for the
+    % guess x_initial, blurring kernel and type of norm to use for the
     % prox of g
     % OUTPUTS: deblurred image 
 

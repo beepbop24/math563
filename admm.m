@@ -2,7 +2,7 @@ function [deblurred_x, k, loss] = admm(b, x_original, t, rho, gamma, maxiter, to
     % function that computes ADMM
     % INPUTS: blurred image b, step size t, parameter rho,
     % denoizing parameter gamma, number of max iterations maxiter, initial 
-    % guess (u_0, y_0, w_0, z_0), blurring kernel and type of norm to use for the prox of g
+    % guess x_initial, blurring kernel and type of norm to use for the prox of g
     % OUTPUTS: deblurred image deblurred_x, number of iterations k, loss 
 
 

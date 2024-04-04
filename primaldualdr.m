@@ -3,7 +3,7 @@ function [deblurred_x, k, loss] = primaldualdr(b, x_original, t, rho, gamma, max
     % function that computes Primal Douglas-Rachford Splitting
     % INPUTS: blurred image b, step size t, relaxation parameter rho,
     % denoizing parameter gamma, number of max iterations maxiter, initial 
-    % guess (p_0, q_0), blurring kernel and type of norm to use for the
+    % guess x_initial, blurring kernel and type of norm to use for the
     % prox of g
     % OUTPUTS: deblurred image 
 
