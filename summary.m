@@ -12,10 +12,10 @@ function info = summary(x, b, gamma, kernel, k, maxiter, loss, timerend, tol)
     % too many iterations
     if k < maxiter
         info.result = "Convergence achieved after " + int2str(k) + ...
-            " iterations, for tolerance = " + int2str(tol);
+            " iterations, for tolerance = " + num2str(tol);
     else
         info.result = "Convergence not achieved. Algorithm stopped after " ...
-            + int2str(k) + " iterations, for tolerance = " + int2str(tol);
+            + int2str(k) + " iterations, for tolerance = " + num2str(tol);
     end
 
     % computes value of objective function at the end of the algorithm
