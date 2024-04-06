@@ -43,7 +43,7 @@ function [deblurred_x, k, loss] = admm(b, x_original, t, rho, gamma, maxiter, to
         u_k = boxProx(rho*x_k + (1-rho)*u_k+w_k/t);
 
         %apply A to x_k
-        temp_3_1 = applyK(x_k) + applyD1(x_k) + applyD2(x_k);
+        temp_3_1 = applyK(x_k);
         temp_3_2 = applyD1(x_k);
         temp_3_3 = applyD2(x_k);
 
