@@ -28,8 +28,6 @@ function [deblurred_x, k, loss] = chambollepock(b, x_original, t, s, gamma, maxi
         temp_y1 = y1_k + s*applyK(z_k);
         temp_y2 = y2_k + s*applyD1(z_k);
         temp_y3 = y3_k + s*applyD2(z_k);
-
-      
         
         % using Moreau decomposition to compute
         % prox_{(s*gamma) g^*} (y) = y - (s*gamma) prox_{1/(s*gamma) * g}(y/(s*gamma))

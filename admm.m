@@ -54,7 +54,7 @@ function [deblurred_x, k, loss] = admm(b, x_original, t, rho, gamma, maxiter, to
             rho*temp_3_3+(1-rho)*y3_k+z3_k/t, 1/t, gamma);
 
         % update w_k
-        w_k = w_k +t*(x_k - u_k);
+        w_k = w_k + t*(x_k - u_k);
 
         % update z_k
         z1_k = z1_k + t*(applyK(x_k)-y1_k);

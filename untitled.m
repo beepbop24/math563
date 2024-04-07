@@ -47,21 +47,13 @@ i.tadmm = 0.1;
 i.tcp = 0.1;
 i.scp = 0.1;
 
-
-%% TESTING ALL ALGORITHMS
-[applyK, applyD1, applyD2] = multiplyingMatrix(b, kernel, 1);
-[m, n] = size(b);
-z1_0 = rand(m, n);
-z21_0 = applyK(z1_0);
-z22_0 = applyD1(z1_0);
-z23_0 = applyD2(z1_0);
-
-z2_0 = cat(3, z21_0, z22_0, z23_0);
-
-
+% other parameters
 i.tol = 0.1;
 i.analysis = false;
-i.maxiter=500;
+
+%% TESTING ALL ALGORITHMS
+[m, n] = size(b);
+z1_0 = rand(m, n);
 
 [deblurred_x1, summary1] = optsolver('l1', 'douglasrachfordprimal', z1_0, image_x, kernel, b, i);
 [deblurred_x2, summary2] = optsolver('l1', 'douglasrachfordprimaldual', z1_0, image_x, kernel, b, i);
@@ -81,79 +73,90 @@ figure();
 imshow(deblurred_x4,[])
 
 
-%% TESTING FOR GAMMA (l1 AND l2 problem)
+%% TESTING FOR GAMMA (l1 AND l2 problem) 
+% initial testing to provide overview of dynamics
 i.tol = 0.1;
 i.analysis = false;
 i.maxiter=500;
 
-gammal1_values = [0.0001, 0.001, 0.1, 1, 10];
-gammal2_values = [0.0001, 0.001, 0.1, 1, 10];
+gammal1_values = [0.00005, 0.0001, 0.0005, 0.001, 0.005, 0.1, 0.5, 1, 5, 10];
+gammal2_values = [0.00005, 0.0001, 0.0005, 0.001, 0.005, 0.1, 0.5, 1, 5, 10];
 
-gammal1_loss1 = zeros(1, 5);
-gammal1_loss2 = zeros(1, 5);
-gammal1_loss3 = zeros(1, 5);
-gammal1_loss4 = zeros(1, 5);
+gammal1_loss1 = zeros(1, 10);
+gammal1_loss2 = zeros(1, 10);
+gammal1_loss3 = zeros(1, 10);
+gammal1_loss4 = zeros(1, 10);
+
+gammal2_loss1 = zeros(1, 10);
+gammal2_loss2 = zeros(1, 10);
+gammal2_loss3 = zeros(1, 10);
+gammal2_loss4 = zeros(1, 10);
 
 
-gammal2_loss1 = zeros(1, 5);
-gammal2_loss2 = zeros(1, 5);
-gammal2_loss3 = zeros(1, 5);
-gammal2_loss4 = zeros(1, 5);
-
-for k=1:5
+for k=1:10
     i.gammal1 = gammal1_values(k);
     i.gammal2 = gammal2_values(k);
 
     % tests for l1 problem
-    %[deblurred_x1, summary1] = optsolver('l1', 'douglasrachfordprimal', z1_0, image_x, kernel, b, i);
-    %[deblurred_x2, summary2] = optsolver('l1', 'douglasrachfordprimaldual', z1_0, image_x, kernel, b, i);
-    %[deblurred_x3, summary3] = optsolver('l1', 'admm', z1_0, image_x, kernel, b, i);
+    [deblurred_x1, summary1] = optsolver('l1', 'douglasrachfordprimal', z1_0, image_x, kernel, b, i);
+    [deblurred_x2, summary2] = optsolver('l1', 'douglasrachfordprimaldual', z1_0, image_x, kernel, b, i);
+    [deblurred_x3, summary3] = optsolver('l1', 'admm', z1_0, image_x, kernel, b, i);
     [deblurred_x4, summary4] = optsolver('l1', 'chambollepock', z1_0, image_x, kernel, b, i);
 
-    %gammal1_loss1(k) = summary1.loss;
-    %gammal1_loss2(k) = summary2.loss;
-    %gammal1_loss3(k) = summary3.loss;
+    gammal1_loss1(k) = summary1.loss;
+    gammal1_loss2(k) = summary2.loss;
+    gammal1_loss3(k) = summary3.loss;
     gammal1_loss4(k) = summary4.loss;
 
 
     % tests for l2 problem
-    %[deblurred_x5, summary5] = optsolver('l2', 'douglasrachfordprimal', z1_0, image_x, kernel, b, i);
-    %[deblurred_x6, summary6] = optsolver('l2', 'douglasrachfordprimaldual', z1_0, image_x, kernel, b, i);
-    %[deblurred_x7, summary7] = optsolver('l2', 'admm', z1_0, image_x, kernel, b, i);
+    [deblurred_x5, summary5] = optsolver('l2', 'douglasrachfordprimal', z1_0, image_x, kernel, b, i);
+    [deblurred_x6, summary6] = optsolver('l2', 'douglasrachfordprimaldual', z1_0, image_x, kernel, b, i);
+    [deblurred_x7, summary7] = optsolver('l2', 'admm', z1_0, image_x, kernel, b, i);
     [deblurred_x8, summary8] = optsolver('l2', 'chambollepock', z1_0, image_x, kernel, b, i);
 
-    %gammal2_loss1(k) = summary5.loss;
-    %gammal2_loss2(k) = summary6.loss;
-    %gammal2_loss3(k) = summary7.loss;
+    gammal2_loss1(k) = summary5.loss;
+    gammal2_loss2(k) = summary6.loss;
+    gammal2_loss3(k) = summary7.loss;
     gammal2_loss4(k) = summary8.loss;
 
 end
 
-% visualizing the data
-figure();
-plot(log(gammal1_values), gammal1_loss1)
-hold on
-plot(log(gammal1_values), gammal1_loss2)
-hold on
-plot(log(gammal1_values), gammal1_loss3)
-hold on
-plot(log(gammal1_values), gammal1_loss4)
-hold off
-legend('primaldr', 'primaldualdr', 'admm', 'chambollepock')
-
-
 
 % visualizing the data
-figure();
-plot(log(gammal2_values), gammal2_loss1)
+h1 = figure(1);
+plot(log10(gammal1_values), gammal1_loss1)
 hold on
-plot(log(gammal2_values), gammal2_loss2)
+plot(log10(gammal1_values), gammal1_loss2)
 hold on
-plot(log(gammal2_values), gammal2_loss3)
+plot(log10(gammal1_values), gammal1_loss3)
 hold on
-plot(log(gammal2_values), gammal2_loss4)
+plot(log10(gammal1_values), gammal1_loss4)
 hold off
 legend('primaldr', 'primaldualdr', 'admm', 'chambollepock')
+xlabel('log10(gamma)')
+ylabel('loss')
+title('Value of Loss for 4 Algorithms Depending on Value of Gamma Hyperparameter -- l1 problem')
+saveas(h1, 'gamma_l1','jpeg');
+
+
+% visualizing the data
+h2 = figure(2);
+plot(log10(gammal2_values), gammal2_loss1)
+hold on
+plot(log10(gammal2_values), gammal2_loss2)
+hold on
+plot(log10(gammal2_values), gammal2_loss3)
+hold on
+plot(log10(gammal2_values), gammal2_loss4)
+hold off
+legend('primaldr', 'primaldualdr', 'admm', 'chambollepock')
+xlabel('log10(gamma)')
+ylabel('loss')
+title('Value of Loss for 4 Algorithms Depending on Value of Gamma Hyperparameter -- l2 Problem')
+saveas(h2, 'gamma_l2','jpeg');
+
+
 
 
      
