@@ -75,10 +75,6 @@ imshow(deblurred_x4,[])
 
 %% TESTING FOR GAMMA (l1 AND l2 problem) 
 % initial testing to provide overview of dynamics
-i.tol = 0.1;
-i.analysis = false;
-i.maxiter=500;
-
 gammal1_values = [0.00005, 0.0001, 0.0005, 0.001, 0.005, 0.1, 0.5, 1, 5, 10];
 gammal2_values = [0.00005, 0.0001, 0.0005, 0.001, 0.005, 0.1, 0.5, 1, 5, 10];
 
@@ -136,7 +132,7 @@ hold off
 legend('primaldr', 'primaldualdr', 'admm', 'chambollepock')
 xlabel('log10(gamma)')
 ylabel('loss')
-title('Value of Loss for 4 Algorithms Depending on Value of Gamma Hyperparameter -- l1 problem')
+title('Value of Loss for 4 Algorithms Depending on Value of Gamma Hyperparameter -- l1 Problem')
 saveas(h1, 'gamma_l1','jpeg');
 
 
@@ -155,6 +151,48 @@ xlabel('log10(gamma)')
 ylabel('loss')
 title('Value of Loss for 4 Algorithms Depending on Value of Gamma Hyperparameter -- l2 Problem')
 saveas(h2, 'gamma_l2','jpeg');
+
+
+%% TESTING FOR s (CHAMBOLLE-POCK) (l1 AND l2 problem) 
+% initial testing to provide overview of dynamics
+
+s_values = [0.00005, 0.0001, 0.0005, 0.001, 0.005, 0.1, 0.5, 1, 5, 10];
+
+sl1_loss = zeros(1, 10);
+sl2_loss = zeros(1, 10);
+
+for k=1:10
+    i.scp = s_values(k);
+
+    % test for l1 problem
+    [deblurred_x4, summary4] = optsolver('l1', 'chambollepock', z1_0, image_x, kernel, b, i);
+    sl1_loss(k) = summary4.loss;
+ 
+
+    % tests for l2 problem
+    [deblurred_x8, summary8] = optsolver('l2', 'chambollepock', z1_0, image_x, kernel, b, i);
+    sl2_loss(k) = summary8.loss;
+
+end
+
+
+% visualizing the data
+h3 = figure(3);
+plot(log10(s_values), sl1_loss)
+xlabel('log10(s)')
+ylabel('loss')
+title('Value of Loss for Chambolle-Pock Algorithm Depending on Value of Step Size s -- l1 Problem')
+saveas(h3, 's_l1','jpeg');
+
+
+% visualizing the data
+h4 = figure(4);
+plot(log10(s_values), sl2_loss)
+xlabel('log10(s)')
+ylabel('loss')
+title('Value of Loss for Chambolle-Pock Algorithm Depending on Value of Step Size s -- l2 Problem')
+saveas(h4, 's_l2','jpeg');
+
 
 
 
