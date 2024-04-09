@@ -35,7 +35,7 @@ function [deblurred_x, k, loss] = admm(b, x_original, t, rho, gamma, maxiter, to
         temp_2 = applyKTrans(z1_k) + applyD1Trans(z2_k) + applyD2Trans(z3_k);
     
         % update x_k
-        % apply (A^TA)^(-1) to u_k+temp_1-1/t(w_k+temp_2)
+        % apply (I + A^TA)^(-1) to u_k+temp_1-1/t(w_k+temp_2)
         x_k = invertMatrix(u_k+temp_1-(1/t)*(w_k+temp_2));
 
         %update u_k
