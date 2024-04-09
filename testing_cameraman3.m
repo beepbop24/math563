@@ -1,4 +1,5 @@
-%% TESTING WITH CAMERAMAN IMAGE FOR GAUSSIAN BLUR AND SALT AND PEPPER NOISE
+
+%% DIFFERENT IMAGES & KERNELS TO TEST ALGORITHMS
 % img 1 -- most tests (small image)
 image_x = importimage("testimages/cameraman.jpg");
 

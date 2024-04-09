@@ -2,7 +2,7 @@
 % img 1 -- most tests (small image)
 image_x = importimage("testimages/cameraman.jpg");
 
-kernel = fspecial('gaussian', [10 10], 15);
+kernel = fspecial('motion',20, 45);
 
 b = imfilter(image_x, kernel);
 b = imnoise(b,'salt & pepper', 0.5);
