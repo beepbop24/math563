@@ -1,12 +1,11 @@
-
-%% DIFFERENT IMAGES & KERNELS TO TEST ALGORITHMS
+%% TESTING WITH CAMERAMAN IMAGE FOR GAUSSIAN BLUR AND GAUSSIAN NOISE
 % img 1 -- most tests (small image)
 image_x = importimage("testimages/cameraman.jpg");
 
 kernel = fspecial('gaussian', [10 10], 15);
 
 b = imfilter(image_x, kernel);
-b = imnoise(b,'salt & pepper', 0.5);
+b = imnoise(b,'gaussian', 0, 0.05);
 
 % show image for test
 figure('Name','original image')
@@ -50,22 +49,22 @@ i.analysis = false;
 [m, n] = size(b);
 z1_0 = rand(m, n);
 
-[deblurred_x1, summary1] = optsolver('l1', 'douglasrachfordprimal', z1_0, image_x, kernel, b, i);
-[deblurred_x2, summary2] = optsolver('l1', 'douglasrachfordprimaldual', z1_0, image_x, kernel, b, i);
-[deblurred_x3, summary3] = optsolver('l1', 'admm', z1_0, image_x, kernel, b, i);
-[deblurred_x4, summary4] = optsolver('l1', 'chambollepock', z1_0, image_x, kernel, b, i);
+[deblurred_x1_base, summary1] = optsolver('l1', 'douglasrachfordprimal', z1_0, image_x, kernel, b, i);
+[deblurred_x2_base, summary2] = optsolver('l1', 'douglasrachfordprimaldual', z1_0, image_x, kernel, b, i);
+[deblurred_x3_base, summary3] = optsolver('l1', 'admm', z1_0, image_x, kernel, b, i);
+[deblurred_x4_base, summary4] = optsolver('l1', 'chambollepock', z1_0, image_x, kernel, b, i);
 
 figure();
-imshow(deblurred_x1,[])
+imshow(deblurred_x1_base,[])
 
 figure();
-imshow(deblurred_x2,[])
+imshow(deblurred_x2_base,[])
 
 figure();
-imshow(deblurred_x3,[])
+imshow(deblurred_x3_base,[])
 
 figure();
-imshow(deblurred_x4,[])
+imshow(deblurred_x4_base,[])
 
 
 %% TESTING FOR GAMMA (l1 AND l2 problem) 
@@ -97,7 +96,7 @@ legend('primaldr', 'primaldualdr', 'admm', 'chambollepock')
 xlabel('log10(gamma)')
 ylabel('loss')
 title('Value of Loss for 4 Algorithms Depending on Value of Gamma Hyperparameter -- l1 Problem')
-saveas(h1, 'gamma_l1','jpeg');
+saveas(h1, 'gamma_l1_gaussianNoise','jpeg');
 
 
 % visualizing the data
@@ -114,7 +113,7 @@ legend('primaldr', 'primaldualdr', 'admm', 'chambollepock')
 xlabel('log10(gamma)')
 ylabel('loss')
 title('Value of Loss for 4 Algorithms Depending on Value of Gamma Hyperparameter -- l2 Problem')
-saveas(h2, 'gamma_l2','jpeg');
+saveas(h2, 'gamma_l2_gaussianNoise','jpeg');
 
 
 %% TESTING FOR s (CHAMBOLLE-POCK) (l1 AND l2 problem) 
@@ -138,6 +137,6 @@ legend('l1 problem', 'l2 problem')
 xlabel('log10(s)')
 ylabel('loss')
 title('Value of Loss for Chambolle-Pock Algorithm Depending on Value of Step Size s')
-saveas(h3, 's_loss','jpeg');
+saveas(h3, 's_loss_gaussianNoise','jpeg');
 
      
