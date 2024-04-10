@@ -67,9 +67,9 @@ figure();
 imshow(deblurred_x4_base,[])
 
 
-%% TESTING FOR GAMMA (l1 AND l2 problem) 
+%% TESTING FOR GAMMA (l1 AND l2 problem)  
 % initial testing to provide overview of dynamics
-gamma_values = [0.0001, 0.00025, 0.0005, 0.001, 0.0025, 0.005, 0.1, 0.25, 0.5, 1];
+gamma_values = [0.0001, 0.00025, 0.0005, 0.001, 0.0025, 0.005, 0.1, 0.25, 0.5, 1, 2.5, 5];
 
 [deblurred_x1, gamma_loss1] = testinggamma('l1', 'douglasrachfordprimal', z1_0, image_x, kernel, b, i, gamma_values);
 [deblurred_x2, gamma_loss2] = testinggamma('l1', 'douglasrachfordprimaldual', z1_0, image_x, kernel, b, i, gamma_values);
@@ -84,13 +84,13 @@ gamma_values = [0.0001, 0.00025, 0.0005, 0.001, 0.0025, 0.005, 0.1, 0.25, 0.5, 1
 
 % visualizing the data
 h1 = figure(1);
-plot(log10(gamma_values), gammal1_loss1)
+plot(log10(gamma_values), gamma_loss1)
 hold on
-plot(log10(gamma_values), gammal1_loss2)
+plot(log10(gamma_values), gamma_loss2)
 hold on
-plot(log10(gamma_values), gammal1_loss3)
+plot(log10(gamma_values), gamma_loss3)
 hold on
-plot(log10(gamma_values), gammal1_loss4)
+plot(log10(gamma_values), gamma_loss4)
 hold off
 legend('primaldr', 'primaldualdr', 'admm', 'chambollepock')
 xlabel('log10(gamma)')
@@ -101,13 +101,13 @@ saveas(h1, 'gamma_l1_gaussian','jpeg');
 
 % visualizing the data
 h2 = figure(2);
-plot(log10(gamma_values), gammal2_loss1)
+plot(log10(gamma_values), gamma_loss5)
 hold on
-plot(log10(gamma_values), gammal2_loss2)
+plot(log10(gamma_values), gamma_loss6)
 hold on
-plot(log10(gamma_values), gammal2_loss3)
+plot(log10(gamma_values), gamma_loss7)
 hold on
-plot(log10(gamma_values), gammal2_loss4)
+plot(log10(gamma_values), gamma_loss8)
 hold off
 legend('primaldr', 'primaldualdr', 'admm', 'chambollepock')
 xlabel('log10(gamma)')
@@ -121,7 +121,7 @@ saveas(h2, 'gamma_l2_gaussian','jpeg');
 i.gammal1 = 0.049;
 i.gammal2 = 0.049;
 
-s_values = [0.0001, 0.00025, 0.0005, 0.001, 0.0025, 0.005, 0.1, 0.25, 0.5, 1];
+s_values = [0.0001, 0.00025, 0.0005, 0.001, 0.0025, 0.005, 0.1, 0.25, 0.5, 1, 2.5, 5];
 
 [deblurred_x1, s_loss1] = testingscp('l1', z1_0, image_x, kernel, b, i, s_values);
 [deblurred_x2, s_loss2] = testingscp('l2', z1_0, image_x, kernel, b, i, s_values);
@@ -129,9 +129,9 @@ s_values = [0.0001, 0.00025, 0.0005, 0.001, 0.0025, 0.005, 0.1, 0.25, 0.5, 1];
 
 % visualizing the data
 h3 = figure(3);
-plot(log10(s_values), sl1_loss)
+plot(log10(s_values), s_loss1)
 hold on
-plot(log10(s_values), sl2_loss)
+plot(log10(s_values), s_loss2)
 hold off
 legend('l1 problem', 'l2 problem')
 xlabel('log10(s)')
