@@ -33,16 +33,16 @@ function [x_sol, summary_x] = optsolver(problem, algorithm, x_initial, x_origina
 
     % choice of algorithm
     if strcmp(algorithm, 'douglasrachfordprimal') == 1
-        [x_sol, k, loss] = primaldr(b, x_original, i.tprimaldr, i.rhoprimaldr, gamma, i.maxiter, i.tol, i.analysis, x_initial, kernel, norm_prox);
+        [x_sol, k, loss] = primaldr(b, x_original, i.tprimaldr, i.rhoprimaldr, gamma, i.maxiter, i.tol, i.analysis, x_initial, kernel, norm_prox, problem);
 
     elseif strcmp(algorithm, 'douglasrachfordprimaldual') == 1
-        [x_sol, k, loss] = primaldualdr(b, x_original, i.tprimaldualdr, i.rhoprimaldualdr, gamma, i.maxiter, i.tol, i.analysis, x_initial, kernel, norm_prox);
+        [x_sol, k, loss] = primaldualdr(b, x_original, i.tprimaldualdr, i.rhoprimaldualdr, gamma, i.maxiter, i.tol, i.analysis, x_initial, kernel, norm_prox, problem);
 
     elseif strcmp(algorithm, 'admm') == 1
-        [x_sol, k, loss] = admm(b, x_original, i.tadmm, i.rhoadmm, gamma, i.maxiter, i.tol, i.analysis, x_initial, kernel, norm_prox);
+        [x_sol, k, loss] = admm(b, x_original, i.tadmm, i.rhoadmm, gamma, i.maxiter, i.tol, i.analysis, x_initial, kernel, norm_prox, problem);
 
     elseif strcmp(algorithm, 'chambollepock') == 1
-        [x_sol, k, loss] = chambollepock(b, x_original, i.tcp, i.scp, gamma, i.maxiter, i.tol, i.analysis, x_initial, kernel, norm_prox);
+        [x_sol, k, loss] = chambollepock(b, x_original, i.tcp, i.scp, gamma, i.maxiter, i.tol, i.analysis, x_initial, kernel, norm_prox, problem);
 
     else
         error('Not a Valid Algorithm')
@@ -50,5 +50,5 @@ function [x_sol, summary_x] = optsolver(problem, algorithm, x_initial, x_origina
 
 
     timerend = toc(timerstart);
-    summary_x = summary(x_sol, b, gamma, kernel, k, i.maxiter, loss, timerend, i.tol);
+    summary_x = summary(x_sol, b, gamma, kernel, k, i.maxiter, loss, timerend, i.tol, problem);
 end

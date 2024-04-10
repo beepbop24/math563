@@ -1,4 +1,4 @@
-function info = summary(x, b, gamma, kernel, k, maxiter, loss, timerend, tol)
+function info = summary(x, b, gamma, kernel, k, maxiter, loss, timerend, tol, problem)
     % function that produces a summary of each algorithm
     % INPUTS: (partially) deblurred image x, blurred image b, blurring kernel, number of
     % iterations the algorithm ran for k, the number of max iterations, the
@@ -19,7 +19,7 @@ function info = summary(x, b, gamma, kernel, k, maxiter, loss, timerend, tol)
     end
 
     % computes value of objective function at the end of the algorithm
-    info.f = objectivefunction(x, b, gamma, kernel);
+    info.f = objectivefunction(x, b, gamma, kernel, problem);
     
     % adds loss value to objective function
     info.loss = loss(k);
