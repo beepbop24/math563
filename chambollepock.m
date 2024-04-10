@@ -1,4 +1,4 @@
-function [deblurred_x, k, loss] = chambollepock(b, x_original, t, s, gamma, maxiter, tol, analysis, x_initial, kernel, norm_prox)
+function [deblurred_x, k, loss] = chambollepock(b, x_original, t, s, gamma, maxiter, tol, analysis, x_initial, kernel, norm_prox, problem)
     % function that computes Primal Douglas-Rachford Splitting
     % INPUTS: blurred image b, step size t, relaxation parameter rho,
     % denoizing parameter gamma, number of max iterations maxiter, initial 
@@ -61,7 +61,7 @@ function [deblurred_x, k, loss] = chambollepock(b, x_original, t, s, gamma, maxi
     
         % print summary if wanted during each iteration
         if analysis
-            temp_summary = summary(deblurred_x, b, gamma, kernel, k, maxiter, loss, timerend, tol);
+            temp_summary = summary(deblurred_x, b, gamma, kernel, k, maxiter, loss, timerend, tol, problem);
         end
 
         % break condition if l2 norm of x-x* < tol

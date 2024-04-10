@@ -1,4 +1,4 @@
-function [deblurred_x, k, loss] = admm(b, x_original, t, rho, gamma, maxiter, tol, analysis, x_initial, kernel, norm_prox)
+function [deblurred_x, k, loss] = admm(b, x_original, t, rho, gamma, maxiter, tol, analysis, x_initial, kernel, norm_prox, problem)
     % function that computes ADMM
     % INPUTS: blurred image b, step size t, parameter rho,
     % denoizing parameter gamma, number of max iterations maxiter, initial 
@@ -40,7 +40,7 @@ function [deblurred_x, k, loss] = admm(b, x_original, t, rho, gamma, maxiter, to
 
         %update u_k
         %apply prox(t^-1f) to rho*x_k + (1-rho)*u_k+w_k/t
-        u_k = boxProx(rho*x_k + (1-rho)*u_k+w_k/t);
+        u_k = boxProx(rho*x_k + (1-rho)*u_k + w_k/t);
 
         %apply A to x_k
         temp_3_1 = applyK(x_k);
@@ -48,7 +48,7 @@ function [deblurred_x, k, loss] = admm(b, x_original, t, rho, gamma, maxiter, to
         temp_3_3 = applyD2(x_k);
 
         %update y_k 
-        y1_k = norm_prox(rho*temp_3_1+(1-rho)*y1_k+z1_k/t,1/t,b);
+        y1_k = norm_prox(rho*temp_3_1+(1-rho)*y1_k+z1_k/t, 1/t, b);
 
         [y2_k, y3_k] = isoProx(rho*temp_3_2+(1-rho)*y2_k+z2_k/t, ...
             rho*temp_3_3+(1-rho)*y3_k+z3_k/t, 1/t, gamma);
@@ -73,7 +73,7 @@ function [deblurred_x, k, loss] = admm(b, x_original, t, rho, gamma, maxiter, to
         
         % print summary if wanted during each iteration
         if analysis
-            temp_summary = summary(deblurred_x, b, gamma, kernel, k, maxiter, loss, timerend, tol);
+            temp_summary = summary(deblurred_x, b, gamma, kernel, k, maxiter, loss, timerend, tol, problem);
         end
 
         % break condition if l2 norm of x-x* < tol
