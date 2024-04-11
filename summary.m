@@ -1,4 +1,4 @@
-function info = summary(x, b, gamma, kernel, k, maxiter, loss, timerend, tol, problem)
+function [info, loss] = summary(x, b, gamma, kernel, k, maxiter, loss, timerend, tol, problem)
     % function that produces a summary of each algorithm
     % INPUTS: (partially) deblurred image x, blurred image b, blurring kernel, number of
     % iterations the algorithm ran for k, the number of max iterations, the
