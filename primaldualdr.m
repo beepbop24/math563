@@ -56,7 +56,8 @@ function [deblurred_x, k, loss] = primaldualdr(b, x_original, t, rho, gamma, max
 
         deblurred_x = boxProx(p_k);
 
-        loss(k) = norm(deblurred_x-x_original, 2);
+        loss(k) = abs(objectivefunction(deblurred_x, b, gamma, kernel, problem)...
+            - objectivefunction(x_original, b, gamma, kernel, problem));
         timerend = "algorithm ongoing -- CPU time TBD";
 
         % print summary if wanted during each iteration

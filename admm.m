@@ -68,7 +68,8 @@ function [deblurred_x, k, loss] = admm(b, x_original, t, rho, gamma, maxiter, to
     
         deblurred_x = invertMatrix(u_k + temp_4 - (1/t)*(w_k + temp_5));
  
-        loss(k) = norm(deblurred_x-x_original, 2);
+        loss(k) = abs(objectivefunction(deblurred_x, b, gamma, kernel, problem)...
+            - objectivefunction(x_original, b, gamma, kernel, problem));
         timerend = "algorithm ongoing -- CPU time TBD";
         
         % print summary if wanted during each iteration
