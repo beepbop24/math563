@@ -8,7 +8,10 @@ function f = objectivefunction(x, b, gamma, kernel, problem)
     % here u=1 is unused
     [applyK, applyD1, applyD2] = multiplyingMatrix(b, kernel, 1);
 
-    if all(x(:) <= 1) && all(x(:) >= 0)
+    % commented out indicator function of objective function because it
+    % ADMM has problems and f == inf 
+    
+    %if all(x(:) <= 1) && all(x(:) >= 0)
         % first term is l1 or l2 norm of Kx-b, second term is gamma * iso norm of Dx 
         % (in this case the indicator function is 0)
         if strcmp(problem, 'l1') == 1
@@ -21,9 +24,9 @@ function f = objectivefunction(x, b, gamma, kernel, problem)
 
         f = norm_term + gamma*sum(sqrt(applyD1(x).^2+applyD2(x).^2), "all");
 
-    else
+    %else
         % pixel values are not between 0 and 1 so indicator function is +
         % infinity
-        f = Inf;
-    end
+        %f = Inf;
+    %end
 end
