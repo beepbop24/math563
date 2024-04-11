@@ -1,4 +1,4 @@
-function [x_sol, summary_x] = optsolver(problem, algorithm, x_initial, x_original, kernel, b, i)
+function [x_sol, summary_x, loss] = optsolver(problem, algorithm, x_initial, x_original, kernel, b, i)
     % function that computes given algorithm to deblur image
     % INPUTS: problem ('l1' or 'l2' indicating the norm to use), 
     % algorithm (algorithm of choice from "douglasrachfordprimal",
@@ -6,7 +6,7 @@ function [x_sol, summary_x] = optsolver(problem, algorithm, x_initial, x_origina
     % x_initial: initial guess of the correct image
     % x_original: true image
     % b: blurred & noisy image
-    % i (structure containing the following hyperparameters:
+    % i (struct containing the following hyperparameters:
     %  i.maxiter: maximum number of iterations
     %  i.gammal1, i.gammal2: denoising parameter for the l1 and l2 problems
     %  i.rhoprimaldr, i.tprimaldr: relaxation parameter 0 < rho < 2 and
@@ -24,6 +24,48 @@ function [x_sol, summary_x] = optsolver(problem, algorithm, x_initial, x_origina
     %
     % OUTPUTS: deblurred_x (deblurred image), summary_x (containing objective
     % function value, # of iterations, CPU time, loss)
+
+    % DEFAULT PARAMETER VALUES -- optimal values found during testing
+    % maximum number of iterations
+    defaults.maxiter = 500;
+
+    % denoising for l1 and l2 loss
+    defaults.gammal1 = 1;
+    defaults.gammal2 = 0.25;
+
+    % relaxation parameter (rho in (0, 2)) and step size t > 0 for Primal
+    % Douglas-Rachford Splitting
+    defaults.rhoprimaldr = 2.0;
+    defaults.tprimaldr = 0.1;
+
+    % relaxation parameter (rho in (0, 2)) and step size t > 0 for Primal Dual
+    % Douglas-Rachford Splitting
+    defaults.rhoprimaldualdr = 1.5;
+    defaults.tprimaldualdr = 0.1;
+
+    % relaxation parameter (rho in (0, 2)) and step size t > 0 for Alternating
+    % Direction Method of Multipliers
+    defaults.rhoadmm = 1.5;
+    defaults.tadmm = 0.1;
+
+    % step size parameters for the Chambolle-Pock Algorithm
+    defaults.tcp = 0.1;
+    defaults.scp = 0.1;
+
+    % other parameters (tol very small as to have basically no tolerance as
+    % default, the algorithm will run for the number of specified iterations)
+    defaults.tol = 0.001;
+    defaults.analysis = false;
+
+    % setting i values with default if not specified in user input
+    default_names = fieldnames(defaults);
+    i_names = fieldnames(i);
+    missing = find(~ismember(default_names, i_names));
+
+    for k = 1:length(missing)
+        i.(default_names{missing(k)}) = defaults.(default_names{missing(k)});
+    end
+
 
     % selects correct norm & gamma to use for the function g (l1 or l2)
     [norm_prox, gamma] = proxproblem(problem, i);
@@ -50,5 +92,5 @@ function [x_sol, summary_x] = optsolver(problem, algorithm, x_initial, x_origina
 
 
     timerend = toc(timerstart);
-    summary_x = summary(x_sol, b, gamma, kernel, k, i.maxiter, loss, timerend, i.tol, problem);
+    [summary_x, loss] = summary(x_sol, b, gamma, kernel, k, i.maxiter, loss, timerend, i.tol, problem);
 end
