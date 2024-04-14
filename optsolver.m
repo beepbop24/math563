@@ -30,8 +30,8 @@ function [x_sol, summary_x, loss] = optsolver(problem, algorithm, x_initial, x_o
     defaults.maxiter = 500;
 
     % denoising for l1 and l2 loss
-    defaults.gammal1 = 1;
-    defaults.gammal2 = 0.25;
+    defaults.gammal1 = 0.049;
+    defaults.gammal2 = 0.049;
 
     % relaxation parameter (rho in (0, 2)) and step size t > 0 for Primal
     % Douglas-Rachford Splitting
