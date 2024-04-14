@@ -27,6 +27,8 @@ optsolver is a package used to deblur black and white images with Matlab
     %  i.analysis: boolean that specifies whether the algorithm prints
     %  info during each iteration)
 
+    % will run if i = struct(), with default parameters
+
     %OUTPUTS: x_sol (deblurred image), summary_x (containing objective
     % function value, # of iterations, CPU time, final loss) and loss array
 
