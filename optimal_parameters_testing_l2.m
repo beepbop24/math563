@@ -63,8 +63,10 @@ title('Value of Loss for 4 Algorithms vs Iteration Count for Tuned Hyperparamete
 saveas(h_loss, 'l2_loss_all','jpeg');
 
 %% TESTING OPTIMAL PARAMETERS WITH CAMERAMAN IMAGE FOR GAUSSIAN BLUR AND SALT & PEPPER NOISE
-% img 1 -- most tests (small image)
-image_x = importimage("testimages/manWithHat.tiff");
+% img 2
+image_x = importimage("testimages/manWithHat.jpg");
+resizefactor = 0.25;
+image_x = imresize(image_x, resizefactor);
 
 kernel = fspecial('gaussian', [10 10], 15);
 
@@ -90,18 +92,34 @@ i = struct();
 
 h_opt_hat1 = figure(1);
 imshow(deblurred_x1_opt_hat,[])
-saveas(h_opt1, 'x1_opt_hat','jpeg');
+saveas(h_opt_hat1, 'x1_opt_hat','jpeg');
 
 h_opt_hat2 = figure(2);
 imshow(deblurred_x2_opt_hat,[])
-saveas(h_opt2, 'x2_opt_hat','jpeg');
+saveas(h_opt_hat2, 'x2_opt_hat','jpeg');
 
 h_opt_hat3 = figure(3);
 imshow(deblurred_x3_opt_hat,[])
-saveas(h_opt3, 'x3_opt_hat','jpeg');
+saveas(h_opt_hat3, 'x3_opt_hat','jpeg');
 
 h_opt_hat4 = figure(4);
 imshow(deblurred_x4_opt_hat,[])
-saveas(h_opt4, 'x4_opt_hat','jpeg');
+saveas(h_opt_hat4, 'x4_opt_hat','jpeg');
+
+% plot of loss vs k
+h_loss = figure(5);
+plot(1:500, loss1)
+hold on
+plot(1:500, loss2)
+hold on
+plot(1:500, loss3)
+hold on
+plot(1:500, loss4)
+hold off
+legend('primaldr', 'primaldualdr', 'admm', 'chambollepock')
+xlabel('# of iterations')
+ylabel('loss')
+title('Value of Loss for 4 Algorithms vs Iteration Count for Tuned Hyperparameters -- l2 Problem')
+saveas(h_loss, 'l2_loss_hat','jpeg');
 
 
