@@ -5,7 +5,7 @@ function image_x = importimage(path)
     % OUTPUTS: matrix representing image in black in white with 0 < x < 1
 
     image_x = imread(path);
-    image_x = rgb2gray(image_x);
+    image_x = im2gray(image_x);
 
     image_x = double(image_x(:, :, 1));
     mn = min(image_x(:));
