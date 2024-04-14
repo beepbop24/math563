@@ -23,7 +23,7 @@ function [x_sol, summary_x, loss] = optsolver(problem, algorithm, x_initial, x_o
     %  info during each iteration)
     %
     % OUTPUTS: deblurred_x (deblurred image), summary_x (containing objective
-    % function value, # of iterations, CPU time, loss)
+    % function value, # of iterations, CPU time, final loss) and loss array
 
     % DEFAULT PARAMETER VALUES -- optimal values found during testing
     % maximum number of iterations
