@@ -1,0 +1,17 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: OptSolver
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Catherine
+    family-names: Engert
+  - {}
+repository-code: 'https://github.com/beepbop24/math563'
+abstract: >-
+  Code Used for Image Deblurring -- Final Project MATH563 --
+  Winter 2024
