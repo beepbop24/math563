@@ -35,26 +35,26 @@ function [x_sol, summary_x, loss] = optsolver(problem, algorithm, x_initial, x_o
 
     % relaxation parameter (rho in (0, 2)) and step size t > 0 for Primal
     % Douglas-Rachford Splitting
-    defaults.rhoprimaldr = 0.53;
+    defaults.rhoprimaldr = 1.53;
     defaults.tprimaldr = 0.01;
 
     % relaxation parameter (rho in (0, 2)) and step size t > 0 for Primal Dual
     % Douglas-Rachford Splitting
-    defaults.rhoprimaldualdr = 0.8;
-    defaults.tprimaldualdr = 1;
+    defaults.rhoprimaldualdr = 0.7;
+    defaults.tprimaldualdr = 0.05;
 
     % relaxation parameter (rho in (0, 2)) and step size t > 0 for Alternating
     % Direction Method of Multipliers
-    defaults.rhoadmm = 1.3;
-    defaults.tadmm = 1.2;
+    defaults.rhoadmm = 0.8;
+    defaults.tadmm = 0.003;
 
     % step size parameters for the Chambolle-Pock Algorithm
-    defaults.tcp = 0.005;
-    defaults.scp = 0.01;
+    defaults.tcp = 0.003;
+    defaults.scp = 0.5;
 
-    % other parameters (tol very small as to have basically no tolerance as
+    % other parameters (basically no tolerance as
     % default, the algorithm will run for the number of specified iterations)
-    defaults.tol = 0.001;
+    defaults.tol = 0;
     defaults.analysis = false;
 
     % setting i values with default if not specified in user input

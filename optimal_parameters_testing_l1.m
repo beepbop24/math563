@@ -14,8 +14,7 @@ imshow(image_x,[])
 h_b = figure(1);
 figure('Name','image before deblurring')
 imshow(b,[])
-imshow(b,[])
-saveas(h_b, 'b','jpeg');
+saveas(imshow(b,[]), 'b','jpeg');
 
 %% TESTING ALL ALGORITHMS
 [m, n] = size(b);
@@ -62,6 +61,7 @@ title('Value of Loss for 4 Algorithms vs Iteration Count for Tuned Hyperparamete
 saveas(h_loss, 'l1_loss_all','jpeg');
 
 %% TESTING OPTIMAL PARAMETERS WITH MAN WITH HAT IMAGE FOR GAUSSIAN BLUR AND SALT & PEPPER NOISE
+clc;
 % img 2 
 image_x = importimage("testimages/manWithHat.jpg");
 resizefactor = 0.25;
@@ -122,5 +122,70 @@ xlabel('# of iterations')
 ylabel('loss')
 title('Value of Loss for 4 Algorithms vs Iteration Count for Tuned Hyperparameters -- l1 Problem')
 saveas(h_loss, 'l1_loss_hat','jpeg');
+
+
+%% TESTING OPTIMAL PARAMETERS WITH CAMERAMAN IMAGE FOR MOTION BLUR AND SALT & PEPPER NOISE
+clc;
+% img 1 -- most tests (small image)
+image_x = importimage("testimages/cameraman.jpg");
+
+kernel = fspecial('motion',20, 45);
+
+b = imfilter(image_x, kernel);
+%b = imnoise(b,'salt & pepper', 0.5);
+
+% show image for test
+figure('Name','original image')
+imshow(image_x,[])
+
+h_b = figure(1);
+figure('Name','image before deblurring')
+imshow(b,[])
+saveas(imshow(b,[]), 'b_motion','jpeg');
+
+%% TESTING ALL ALGORITHMS
+[m, n] = size(b);
+z1_0 = rand(m, n);
+i = struct();
+i.gammal1 = 0.05;
+
+[deblurred_x1_opt, summary1, loss1_motion] = optsolver('l1', 'douglasrachfordprimal', z1_0, image_x, kernel, b, i);
+
+i.gammal1 = 0.01;
+[deblurred_x2_opt, summary2, loss2_motion] = optsolver('l1', 'douglasrachfordprimaldual', z1_0, image_x, kernel, b, i);
+[deblurred_x3_opt, summary3, loss3_motion] = optsolver('l1', 'admm', z1_0, image_x, kernel, b, i);
+[deblurred_x4_opt, summary4, loss4_motion] = optsolver('l1', 'chambollepock', z1_0, image_x, kernel, b, i);
+
+h_motion1 = figure(1);
+imshow(deblurred_x1_opt,[])
+saveas(h_motion1, 'x1_opt','jpeg');
+
+h_motion2 = figure(2);
+imshow(deblurred_x2_opt,[])
+saveas(h_motion2, 'x2_opt','jpeg');
+
+h_motion3 = figure(3);
+imshow(deblurred_x3_opt,[])
+saveas(h_motion3, 'x3_opt','jpeg');
+
+h_motion4 = figure(4);
+imshow(deblurred_x4_opt,[])
+saveas(h_motion4, 'x4_opt','jpeg');
+
+% plot of loss vs k
+h_loss = figure(5);
+plot(20:500, loss1_motion(20:500))
+hold on
+plot(20:500, loss2_motion(20:500))
+hold on
+plot(20:500, loss3_motion(20:500))
+hold on
+plot(20:500, loss4_motion(20:500))
+hold off
+legend('primaldr', 'primaldualdr', 'admm', 'chambollepock')
+xlabel('# of iterations')
+ylabel('loss')
+title('Value of Loss for 4 Algorithms vs Iteration Count for Tuned Hyperparameters -- l1 Problem')
+saveas(h_loss, 'l1_loss_motion','jpeg');
 
 
