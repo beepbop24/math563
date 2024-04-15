@@ -10,6 +10,15 @@ function [deblurred_x, k, loss] = chambollepock(b, x_original, t, s, gamma, maxi
     % with parameter value u=1 (u is irrelevant here -- there is no
     % invertMatrix)
     [applyK, applyD1, applyD2, applyKTrans, applyD1Trans, applyD2Trans] = multiplyingMatrix(b, kernel, 1);
+
+    conv_test_x = eye(size(x_initial));
+    conv_test_y1 = applyK(conv_test_x);
+    conv_test_y2 = applyD1(conv_test_x);
+    conv_test_y3 = applyD2(conv_test_x);
+
+    if (t*s*norm([conv_test_y1; conv_test_y2; conv_test_y3], 2)^2) > 1
+        disp("Warning: Chambolle-Pock Convergence Conditions Not Met");
+    end 
     
     % initialization of x, y and z values
     x_k = x_initial;
