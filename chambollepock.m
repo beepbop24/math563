@@ -40,19 +40,12 @@ function [deblurred_x, k, loss] = chambollepock(b, x_original, t, s, gamma, maxi
         
         % using Moreau decomposition to compute
         % prox_{(s*gamma) g^*} (y) = y - (s*gamma) prox_{1/(s*gamma) * g}(y/(s*gamma))
+        y1_k = temp_y1 - s*norm_prox(temp_y1/s, 1/s, b); 
 
-        if gamma==0
-            y1_k = temp_y1;
-            y2_k = temp_y2;
-            y3_k = temp_y3;
-            
-        else
-            y1_k = temp_y1 - s*gamma*norm_prox(temp_y1/(s*gamma), 1/(s*gamma), b); 
-
-            [prox_temp_y2, prox_temp_y3] = isoProx(temp_y2/(s*gamma), temp_y3/(s*gamma), 1/s, 1/gamma);
-            y2_k = temp_y2 - s*gamma*prox_temp_y2;
-            y3_k = temp_y3 - s*gamma*prox_temp_y3;
-        end
+        [prox_temp_y2, prox_temp_y3] = isoProx(temp_y2/s, temp_y3/s, 1/s, gamma);
+        y2_k = temp_y2 - s*prox_temp_y2;
+        y3_k = temp_y3 - s*prox_temp_y3;
+       
 
         % applies x^{k-1} - t*A*y^k
         temp_x = x_k - t*applyKTrans(y1_k) - t*applyD1Trans(y1_k) - t*applyD2Trans(y1_k);  
