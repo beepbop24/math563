@@ -25,7 +25,7 @@ i = struct();
 [deblurred_x2_opt, summary2, loss2] = optsolver('l1', 'douglasrachfordprimaldual', z1_0, image_x, kernel, b, i);
 [deblurred_x3_opt, summary3, loss3] = optsolver('l1', 'admm', z1_0, image_x, kernel, b, i);
 
-i.gammal1 = 0.005;
+i.gammal1 = 0.0001;
 [deblurred_x4_opt, summary4, loss4] = optsolver('l1', 'chambollepock', z1_0, image_x, kernel, b, i);
 
 h_opt1 = figure(1);
@@ -87,8 +87,8 @@ i = struct();
 [deblurred_x1_opt_hat, summary1_hat, loss1_hat] = optsolver('l1', 'douglasrachfordprimal', z1_0, image_x, kernel, b, i);
 [deblurred_x2_opt_hat, summary2_hat, loss2_hat] = optsolver('l1', 'douglasrachfordprimaldual', z1_0, image_x, kernel, b, i);
 [deblurred_x3_opt_hat, summary3_hat, loss3_hat] = optsolver('l1', 'admm', z1_0, image_x, kernel, b, i);
-
-i.gammal1=0.005;
+u
+i.gammal1=0.001;
 [deblurred_x4_opt_hat, summary4_hat, loss4_hat] = optsolver('l1', 'chambollepock', z1_0, image_x, kernel, b, i);
 
 h_opt_hat1 = figure(1);
@@ -147,11 +147,10 @@ saveas(imshow(b,[]), 'b_motion','jpeg');
 [m, n] = size(b);
 z1_0 = rand(m, n);
 i = struct();
-i.gammal1 = 0.05;
 
 [deblurred_x1_opt, summary1, loss1_motion] = optsolver('l1', 'douglasrachfordprimal', z1_0, image_x, kernel, b, i);
 
-i.gammal1 = 0.01;
+i.gammal1 = 0.0001;
 [deblurred_x2_opt, summary2, loss2_motion] = optsolver('l1', 'douglasrachfordprimaldual', z1_0, image_x, kernel, b, i);
 [deblurred_x3_opt, summary3, loss3_motion] = optsolver('l1', 'admm', z1_0, image_x, kernel, b, i);
 [deblurred_x4_opt, summary4, loss4_motion] = optsolver('l1', 'chambollepock', z1_0, image_x, kernel, b, i);
