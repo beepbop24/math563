@@ -48,7 +48,7 @@ function [x_sol, summary_x, loss] = optsolver(problem, algorithm, x_initial, x_o
     defaults.rhoadmm = 1.5;
     defaults.tadmm = 0.1;
 
-    % step size parameters for the Chambolle-Pock Algorithm
+    % step size parameters s > 0, t > 0 for the Chambolle-Pock Algorithm
     defaults.tcp = 0.1;
     defaults.scp = 0.1;
 
